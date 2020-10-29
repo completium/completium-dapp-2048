@@ -4,6 +4,8 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Score from '../components/Score';
+import Button from '@material-ui/core/Button';
+import Divider from '@material-ui/core/Divider';
 import styles from './style.css';
 
 var count = 0;
@@ -426,6 +428,7 @@ const Game = (props) => {
   const gameManager = useRef(getInitialGameManager(props.size));
   const [elements, setElements] = useState(getElements(gameManager.current));
   const [score, setScore] = useState({ score: 0, delta: 0});
+  const [msg, setMsg] = useState(null);
   const move = (key) => {
     var d = mapkeys[key];
     var score = gameManager.current.score;
@@ -434,6 +437,17 @@ const Game = (props) => {
     var delta = newscore - score;
     setElements(getElements(gameManager.current));
     setScore({ score: newscore, delta: delta });
+    if (gameManager.current.over) {
+      setMsg('Game Over');
+    } else if (gameManager.current.over) {
+      setMsg('You Win!');
+    }
+  }
+  const restart = () => {
+    gameManager.current = getInitialGameManager(props.size);
+    setElements(getElements(gameManager.current));
+    setScore({ score: 0, delta: 0});
+    setMsg(null);
   }
   return (
   <Grid container direction="row"  justify="center" alignItems="center" style={{ width: '494px' }}>
@@ -441,6 +455,9 @@ const Game = (props) => {
       <Typography variant='h2' style={{
         fontFamily: "Clear Sans, Helvetica Neue, Arial, sans-serif",
         fontWeight: 700 }}>2048</Typography>
+      <Typography style= {{
+        fontFamily: "Clear Sans, Helvetica Neue, Arial, sans-serif",
+      }}> Join the numbers and get to the <b>2048 tile</b>!</Typography>
     </Grid>
     <Grid item xs={3}>
       <Score score={score} />
@@ -458,6 +475,49 @@ const Game = (props) => {
           )
         } </div>
       </Paper>
+    </Grid>
+    <Grid style={{ marginTop: '12px' }}>
+      <Button
+        color='secondary'
+        onClick={restart}
+      >
+      restart
+      </Button>
+    </Grid>
+    { (msg === null)? <div></div>
+    : (
+      <Grid item style={{ height: 0 }}>
+        <Paper style={{
+          width: '494px',
+          height: '494px',
+          padding: 12,
+          position: 'relative',
+          top: '-542px',
+          opacity: 0.8,
+          zIndex: 100 }}>
+          <Grid container direction="row" justify="center" alignItems="center" style={{ height: '370px' }}>
+            <Grid item>
+              <Typography variant='h5' style={{
+                fontFamily: "Clear Sans, Helvetica Neue, Arial, sans-serif",
+                fontWeight: 700 }}>{msg}</Typography>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>)
+    }
+    <Grid item>
+      <Typography style={{
+        fontFamily: "Clear Sans, Helvetica Neue, Arial, sans-serif",
+      }}><b>HOW TO PLAY</b>: Use your <b>arrow keys</b> to move the tiles. When two tiles with the same number touch,
+        they <b>merge into one!</b></Typography>
+    </Grid>
+    <Grid item xs={12} style={{ paddingTop: '20px', paddingBottom: '20px' }}>
+      <Divider/>
+    </Grid>
+    <Grid item>
+      <Typography style={{
+        fontFamily: "Clear Sans, Helvetica Neue, Arial, sans-serif",
+      }}>Created by Gabriele Cirulli. Based on 1024 by Veewo Studio and conceptually similar to Threes by Asher Vollmer.</Typography>
     </Grid>
   </Grid>
   )
