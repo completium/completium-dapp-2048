@@ -25,7 +25,7 @@ h1.title {
   float: left;
 }
 
-@-webkit-keyframes $animation-name {
+@-webkit-keyframes move-up {
   0% {
     top: 25px;
     opacity: 1;
@@ -35,7 +35,7 @@ h1.title {
     opacity: 0;
   }
 }
-@-moz-keyframes $animation-name {
+@-moz-keyframes move-up {
   0% {
     top: 25px;
     opacity: 1;
@@ -45,7 +45,7 @@ h1.title {
     opacity: 0;
   }
 }
-@keyframes $animation-name {
+@keyframes move-up {
   0% {
     top: 25px;
     opacity: 1;
@@ -89,8 +89,10 @@ h1.title {
   font-weight: bold;
   color: rgba(119, 110, 101, 0.9);
   z-index: 100;
+  animation: move-up 600ms ease-in;
   -webkit-animation: move-up 600ms ease-in;
   -moz-animation: move-up 600ms ease-in;
+  animation-fill-mode: both;
   -webkit-animation-fill-mode: both;
   -moz-animation-fill-mode: both;
 }
@@ -112,19 +114,12 @@ strong.important {
   text-transform: uppercase;
 }
 
-hr {
-  border: none;
-  border-bottom: 1px solid #d8d4d0;
-  margin-top: 20px;
-  margin-bottom: 30px;
-}
-
 .container {
   width: 500px;
   margin: 0 auto;
 }
 
-@-webkit-keyframes $animation-name {
+@-webkit-keyframes fade-in {
   0% {
     opacity: 0;
   }
@@ -132,7 +127,7 @@ hr {
     opacity: 1;
   }
 }
-@-moz-keyframes $animation-name {
+@-moz-keyframes fade-in {
   0% {
     opacity: 0;
   }
@@ -140,7 +135,7 @@ hr {
     opacity: 1;
   }
 }
-@keyframes $animation-name {
+@keyframes fade-in {
   0% {
     opacity: 0;
   }
@@ -174,8 +169,10 @@ hr {
   background: rgba(238, 228, 218, 0.5);
   z-index: 100;
   text-align: center;
+  animation: fade-in 800ms ease 1200ms;
   -webkit-animation: fade-in 800ms ease 1200ms;
   -moz-animation: fade-in 800ms ease 1200ms;
+  animation-fill-mode: both;
   -webkit-animation-fill-mode: both;
   -moz-animation-fill-mode: both;
 }
@@ -336,8 +333,10 @@ hr {
   font-weight: bold;
   z-index: 10;
   font-size: 55px;
+  transition: 100ms ease-in-out;
   -webkit-transition: 100ms ease-in-out;
   -moz-transition: 100ms ease-in-out;
+  transition-property: top, left;
   -webkit-transition-property: top, left;
   -moz-transition-property: top, left;
 }
@@ -421,7 +420,7 @@ hr {
   }
 }
 
-@-webkit-keyframes $animation-name {
+@-webkit-keyframes appear {
   0% {
     opacity: 0;
     -webkit-transform: scale(0);
@@ -433,7 +432,7 @@ hr {
     -moz-transform: scale(1);
   }
 }
-@-moz-keyframes $animation-name {
+@-moz-keyframes appear {
   0% {
     opacity: 0;
     -webkit-transform: scale(0);
@@ -445,7 +444,7 @@ hr {
     -moz-transform: scale(1);
   }
 }
-@keyframes $animation-name {
+@keyframes appear {
   0% {
     opacity: 0;
     -webkit-transform: scale(0);
@@ -458,13 +457,15 @@ hr {
   }
 }
 .tile-new {
+  animation: appear 200ms ease 100ms;
   -webkit-animation: appear 200ms ease 100ms;
   -moz-animation: appear 200ms ease 100ms;
+  animation-fill-mode: both;
   -webkit-animation-fill-mode: both;
   -moz-animation-fill-mode: both;
 }
 
-@-webkit-keyframes $animation-name {
+@-webkit-keyframes pop {
   0% {
     -webkit-transform: scale(0);
     -moz-transform: scale(0);
@@ -478,7 +479,7 @@ hr {
     -moz-transform: scale(1);
   }
 }
-@-moz-keyframes $animation-name {
+@-moz-keyframes pop {
   0% {
     -webkit-transform: scale(0);
     -moz-transform: scale(0);
@@ -492,7 +493,7 @@ hr {
     -moz-transform: scale(1);
   }
 }
-@keyframes $animation-name {
+@keyframes pop {
   0% {
     -webkit-transform: scale(0);
     -moz-transform: scale(0);
@@ -508,8 +509,10 @@ hr {
 }
 .tile-merged {
   z-index: 20;
+  animation: pop 200ms ease 100ms;
   -webkit-animation: pop 200ms ease 100ms;
   -moz-animation: pop 200ms ease 100ms;
+  animation-fill-mode: both;
   -webkit-animation-fill-mode: both;
   -moz-animation-fill-mode: both;
 }
@@ -575,8 +578,10 @@ hr {
     background: rgba(238, 228, 218, 0.5);
     z-index: 100;
     text-align: center;
+    animation: fade-in 800ms ease 1200ms;
     -webkit-animation: fade-in 800ms ease 1200ms;
     -moz-animation: fade-in 800ms ease 1200ms;
+    animation-fill-mode: both;
     -webkit-animation-fill-mode: both;
     -moz-animation-fill-mode: both;
   }

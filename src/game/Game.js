@@ -1,29 +1,28 @@
-/*document.addEventListener("DOMContentLoaded", function () {
-  // Wait till the browser is ready to render the game (avoids glitches)
-  window.requestAnimationFrame(function () {
-    var manager = new GameManager(4, KeyboardInputManager, HTMLActuator);
-  });
-});
+import React, { useEffect, useRef, useState } from "react";
+import KeyboardEventHandler from 'react-keyboard-event-handler';
+import Typography from '@material-ui/core/Typography';
+import styles from './style.css';
 
+var count = 0;
 
-function GameManager(size, InputManager, Actuator) {
+function GameManager(size) {
   this.size         = size; // Size of the grid
-  this.inputManager = new InputManager;
-  this.actuator     = new Actuator;
+ /*  this.inputManager = new InputManager;
+  this.actuator     = new Actuator; */
 
   this.startTiles   = 2;
 
-  this.inputManager.on("move", this.move.bind(this));
-  this.inputManager.on("restart", this.restart.bind(this));
+ /*  this.inputManager.on("move", this.move.bind(this));
+  this.inputManager.on("restart", this.restart.bind(this)); */
 
   this.setup();
 }
 
 // Restart the game
-GameManager.prototype.restart = function () {
+/* GameManager.prototype.restart = function () {
   this.actuator.restart();
   this.setup();
-};
+}; */
 
 // Set up the game
 GameManager.prototype.setup = function () {
@@ -37,7 +36,7 @@ GameManager.prototype.setup = function () {
   this.addStartTiles();
 
   // Update the actuator
-  this.actuate();
+  /* this.actuate(); */
 };
 
 // Set up the initial tiles to start the game with
@@ -51,20 +50,20 @@ GameManager.prototype.addStartTiles = function () {
 GameManager.prototype.addRandomTile = function () {
   if (this.grid.cellsAvailable()) {
     var value = Math.random() < 0.9 ? 2 : 4;
-    var tile = new Tile(this.grid.randomAvailableCell(), value);
+    var tile = new Tile(this.grid.randomAvailableCell(), value, count++);
 
     this.grid.insertTile(tile);
   }
 };
 
 // Sends the updated grid to the actuator
-GameManager.prototype.actuate = function () {
+/* GameManager.prototype.actuate = function () {
   this.actuator.actuate(this.grid, {
     score: this.score,
     over:  this.over,
     won:   this.won
   });
-};
+}; */
 
 // Save all tile positions and remove merger info
 GameManager.prototype.prepareTiles = function () {
@@ -111,7 +110,7 @@ GameManager.prototype.move = function (direction) {
 
         // Only one merger per row traversal?
         if (next && next.value === tile.value && !next.mergedFrom) {
-          var merged = new Tile(positions.next, tile.value * 2);
+          var merged = new Tile(positions.next, tile.value * 2, count++);
           merged.mergedFrom = [tile, next];
 
           self.grid.insertTile(merged);
@@ -143,7 +142,7 @@ GameManager.prototype.move = function (direction) {
       this.over = true; // Game over!
     }
 
-    this.actuate();
+    /* this.actuate(); */
   }
 };
 
@@ -230,8 +229,6 @@ GameManager.prototype.positionsEqual = function (first, second) {
   return first.x === second.x && first.y === second.y;
 };
 
-
-
 function Grid(size) {
   this.size = size;
 
@@ -317,213 +314,11 @@ Grid.prototype.withinBounds = function (position) {
          position.y >= 0 && position.y < this.size;
 };
 
-
-function HTMLActuator() {
-  this.tileContainer    = document.getElementsByClassName("tile-container")[0];
-  this.scoreContainer   = document.getElementsByClassName("score-container")[0];
-  this.messageContainer = document.getElementsByClassName("game-message")[0];
-
-  this.score = 0;
-}
-
-HTMLActuator.prototype.actuate = function (grid, metadata) {
-  var self = this;
-
-  window.requestAnimationFrame(function () {
-    self.clearContainer(self.tileContainer);
-
-    grid.cells.forEach(function (column) {
-      column.forEach(function (cell) {
-        if (cell) {
-          self.addTile(cell);
-        }
-      });
-    });
-
-    self.updateScore(metadata.score);
-
-    if (metadata.over) self.message(false); // You lose
-    if (metadata.won) self.message(true); // You win!
-  });
-};
-
-HTMLActuator.prototype.restart = function () {
-  this.clearMessage();
-};
-
-HTMLActuator.prototype.clearContainer = function (container) {
-  while (container.firstChild) {
-    container.removeChild(container.firstChild);
-  }
-};
-
-HTMLActuator.prototype.addTile = function (tile) {
-  var self = this;
-
-  var element   = document.createElement("div");
-  var position  = tile.previousPosition || { x: tile.x, y: tile.y };
-  positionClass = this.positionClass(position);
-
-  // We can't use classlist because it somehow glitches when replacing classes
-  var classes = ["tile", "tile-" + tile.value, positionClass];
-  this.applyClasses(element, classes);
-
-  element.textContent = tile.value;
-
-  if (tile.previousPosition) {
-    // Make sure that the tile gets rendered in the previous position first
-    window.requestAnimationFrame(function () {
-      classes[2] = self.positionClass({ x: tile.x, y: tile.y });
-      self.applyClasses(element, classes); // Update the position
-    });
-  } else if (tile.mergedFrom) {
-    classes.push("tile-merged");
-    this.applyClasses(element, classes);
-
-    // Render the tiles that merged
-    tile.mergedFrom.forEach(function (merged) {
-      self.addTile(merged);
-    });
-  } else {
-    classes.push("tile-new");
-    this.applyClasses(element, classes);
-  }
-
-  // Put the tile on the board
-  this.tileContainer.appendChild(element);
-};
-
-HTMLActuator.prototype.applyClasses = function (element, classes) {
-  element.setAttribute("class", classes.join(" "));
-};
-
-HTMLActuator.prototype.normalizePosition = function (position) {
-  return { x: position.x + 1, y: position.y + 1 };
-};
-
-HTMLActuator.prototype.positionClass = function (position) {
-  position = this.normalizePosition(position);
-  return "tile-position-" + position.x + "-" + position.y;
-};
-
-HTMLActuator.prototype.updateScore = function (score) {
-  this.clearContainer(this.scoreContainer);
-
-  var difference = score - this.score;
-  this.score = score;
-
-  this.scoreContainer.textContent = this.score;
-
-  if (difference > 0) {
-    var addition = document.createElement("div");
-    addition.classList.add("score-addition");
-    addition.textContent = "+" + difference;
-
-    this.scoreContainer.appendChild(addition);
-  }
-};
-
-HTMLActuator.prototype.message = function (won) {
-  var type    = won ? "game-won" : "game-over";
-  var message = won ? "You win!" : "Game over!"
-
-  // if (ga) ga("send", "event", "game", "end", type, this.score);
-
-  this.messageContainer.classList.add(type);
-  this.messageContainer.getElementsByTagName("p")[0].textContent = message;
-};
-
-HTMLActuator.prototype.clearMessage = function () {
-  this.messageContainer.classList.remove("game-won", "game-over");
-};
-
-
-
-function KeyboardInputManager() {
-  this.events = {};
-
-  this.listen();
-}
-
-KeyboardInputManager.prototype.on = function (event, callback) {
-  if (!this.events[event]) {
-    this.events[event] = [];
-  }
-  this.events[event].push(callback);
-};
-
-KeyboardInputManager.prototype.emit = function (event, data) {
-  var callbacks = this.events[event];
-  if (callbacks) {
-    callbacks.forEach(function (callback) {
-      callback(data);
-    });
-  }
-};
-
-KeyboardInputManager.prototype.listen = function () {
-  var self = this;
-
-  var map = {
-    38: 0, // Up
-    39: 1, // Right
-    40: 2, // Down
-    37: 3, // Left
-    75: 0, // vim keybindings
-    76: 1,
-    74: 2,
-    72: 3
-  };
-
-  document.addEventListener("keydown", function (event) {
-    var modifiers = event.altKey || event.ctrlKey || event.metaKey ||
-                    event.shiftKey;
-    var mapped    = map[event.which];
-
-    if (!modifiers) {
-      if (mapped !== undefined) {
-        event.preventDefault();
-        self.emit("move", mapped);
-      }
-
-      if (event.which === 32) self.restart.bind(self)(event);
-    }
-  });
-
-  var retry = document.getElementsByClassName("retry-button")[0];
-  retry.addEventListener("click", this.restart.bind(this));
-
-  // Listen to swipe events
-  var gestures = [Hammer.DIRECTION_UP, Hammer.DIRECTION_RIGHT,
-                  Hammer.DIRECTION_DOWN, Hammer.DIRECTION_LEFT];
-
-  var gameContainer = document.getElementsByClassName("game-container")[0];
-  var handler       = Hammer(gameContainer, {
-    drag_block_horizontal: true,
-    drag_block_vertical: true
-  });
-
-  handler.on("swipe", function (event) {
-    event.gesture.preventDefault();
-    mapped = gestures.indexOf(event.gesture.direction);
-
-    if (mapped !== -1) self.emit("move", mapped);
-  });
-};
-
-KeyboardInputManager.prototype.restart = function (event) {
-  event.preventDefault();
-  this.emit("restart");
-};
-
-
-
-
-
-function Tile(position, value) {
+function Tile(position, value, id) {
   this.x                = position.x;
   this.y                = position.y;
   this.value            = value || 2;
+  this.id               = id;
 
   this.previousPosition = null;
   this.mergedFrom       = null; // Tracks tiles that merged together
@@ -537,4 +332,121 @@ Tile.prototype.updatePosition = function (position) {
   this.x = position.x;
   this.y = position.y;
 };
-*/
+
+function getInitialGameManager(size) {
+  return new GameManager(size);
+}
+
+const GridContainer = () => {
+  return (
+    <div class="grid-container">
+      <div class="grid-row">
+        <Cell className="grid-cell"/>
+        <Cell className="grid-cell"/>
+        <Cell className="grid-cell"/>
+        <Cell className="grid-cell"/>
+      </div>
+      <div class="grid-row">
+        <Cell className="grid-cell"/>
+        <Cell className="grid-cell"/>
+        <Cell className="grid-cell"/>
+        <Cell className="grid-cell"/>
+      </div>
+      <div class="grid-row">
+        <Cell className="grid-cell"/>
+        <Cell className="grid-cell"/>
+        <Cell className="grid-cell"/>
+        <Cell className="grid-cell"/>
+      </div>
+      <div class="grid-row">
+        <div class="grid-cell"></div>
+        <div class="grid-cell"></div>
+        <div class="grid-cell"></div>
+        <div class="grid-cell"></div>
+      </div>
+    </div>
+  )
+}
+
+const normalizePosition = (position) => {
+  return { x: position.x + 1, y: position.y + 1 };
+}
+
+const positionClass = (position) => {
+  position = normalizePosition(position);
+  return "tile-position-" + position.x + "-" + position.y;
+}
+
+const Cell = (props) => {
+  return (<div className={props.className}></div>)
+}
+
+const addTile = (elements, tile) => {
+  var position  = tile.previousPosition || { x: tile.x, y: tile.y };
+  var posClass = positionClass(position);
+  var classes = ["tile", "tile-" + tile.value, posClass];
+
+  if (tile.previousPosition) {
+    // Make sure that the tile gets rendered in the previous position first
+    /*requestAnimationFrame(function () {*/
+      classes[2] = positionClass({ x: tile.x, y: tile.y });
+      /* self.applyClasses(element, classes); // Update the position */
+    /*});*/
+  } else if (tile.mergedFrom) {
+    classes.push("tile-merged");
+    /* this.applyClasses(element, classes); */
+
+    // Render the tiles that merged
+    tile.mergedFrom.forEach(function (merged) {
+      addTile(elements, merged);
+    });
+  } else {
+    classes.push("tile-new");
+    /* this.applyClasses(element, classes); */
+  }
+  elements.push({ classes: classes.join(' '), value : tile.value, id: tile.id });
+}
+
+const mapkeys = { up: 0, down: 2, right: 1, left: 3}
+
+const getElements = (gm) => {
+  var elements = [];
+  gm.grid.cells.forEach(function (column) {
+    column.forEach(function (cell) {
+      if (cell) {
+        addTile(elements, cell);
+      }
+    });
+  });
+  return elements.map(element =>
+    <div key={element.id} className={element.classes}>{element.value}</div>
+  )
+}
+
+const Game = (props) => {
+  const gameManager = useRef(getInitialGameManager(props.size));
+  const [elements, setElements] = useState(getElements(gameManager.current));
+  const requestRef = useRef();
+  const move = (event) => {
+    requestRef.current = requestAnimationFrame(() => {
+      var d = mapkeys[event.key];
+      gameManager.current.move(d);
+      setElements(getElements(gameManager.current));
+    });
+  }
+  return (
+  <div>
+    <KeyboardEventHandler
+      handleKeys={['up', 'down', 'left', 'right']}
+      onKeyEvent={(key, e) => move({key})}
+    />
+    <GridContainer />
+    <div class="tile-container"> {
+      /* elements.map(element => <div className={element.classes}>{element.value}</div>) */
+      elements
+    } </div>
+  </div>
+  )
+}
+
+export default Game;
