@@ -1,8 +1,9 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import KeyboardEventHandler from 'react-keyboard-event-handler';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import Score from '../components/Score';
 import styles from './style.css';
 
 var count = 0;
@@ -424,17 +425,25 @@ const getElements = (gm) => {
 const Game = (props) => {
   const gameManager = useRef(getInitialGameManager(props.size));
   const [elements, setElements] = useState(getElements(gameManager.current));
+  const [score, setScore] = useState({ score: 0, delta: 0});
   const move = (key) => {
     var d = mapkeys[key];
+    var score = gameManager.current.score;
     gameManager.current.move(d);
+    var newscore = gameManager.current.score;
+    var delta = newscore - score;
     setElements(getElements(gameManager.current));
+    setScore({ score: newscore, delta: delta });
   }
   return (
-  <Grid container direction="row"  justify="center" alignItems="center">
-    <Grid item xs={12}>
+  <Grid container direction="row"  justify="center" alignItems="center" style={{ width: '494px' }}>
+    <Grid item xs={9}>
       <Typography variant='h2' style={{
         fontFamily: "Clear Sans, Helvetica Neue, Arial, sans-serif",
         fontWeight: 700 }}>2048</Typography>
+    </Grid>
+    <Grid item xs={3}>
+      <Score score={score} />
     </Grid>
     <Grid item>
       <Paper style={{ width: '494px', height: '494px', padding: 12 }}>
