@@ -1,6 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import KeyboardEventHandler from 'react-keyboard-event-handler';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
 import styles from './style.css';
 
 var count = 0;
@@ -26,7 +28,7 @@ function GameManager(size) {
 
 // Set up the game
 GameManager.prototype.setup = function () {
-  this.grid         = new Grid(this.size);
+  this.grid         = new Board(this.size);
 
   this.score        = 0;
   this.over         = false;
@@ -229,7 +231,7 @@ GameManager.prototype.positionsEqual = function (first, second) {
   return first.x === second.x && first.y === second.y;
 };
 
-function Grid(size) {
+function Board(size) {
   this.size = size;
 
   this.cells = [];
@@ -238,7 +240,7 @@ function Grid(size) {
 }
 
 // Build a grid of the specified size
-Grid.prototype.build = function () {
+Board.prototype.build = function () {
   for (var x = 0; x < this.size; x++) {
     var row = this.cells[x] = [];
 
@@ -249,7 +251,7 @@ Grid.prototype.build = function () {
 };
 
 // Find the first available random position
-Grid.prototype.randomAvailableCell = function () {
+Board.prototype.randomAvailableCell = function () {
   var cells = this.availableCells();
 
   if (cells.length) {
@@ -257,7 +259,7 @@ Grid.prototype.randomAvailableCell = function () {
   }
 };
 
-Grid.prototype.availableCells = function () {
+Board.prototype.availableCells = function () {
   var cells = [];
 
   this.eachCell(function (x, y, tile) {
@@ -270,7 +272,7 @@ Grid.prototype.availableCells = function () {
 };
 
 // Call callback for every cell
-Grid.prototype.eachCell = function (callback) {
+Board.prototype.eachCell = function (callback) {
   for (var x = 0; x < this.size; x++) {
     for (var y = 0; y < this.size; y++) {
       callback(x, y, this.cells[x][y]);
@@ -279,20 +281,20 @@ Grid.prototype.eachCell = function (callback) {
 };
 
 // Check if there are any cells available
-Grid.prototype.cellsAvailable = function () {
+Board.prototype.cellsAvailable = function () {
   return !!this.availableCells().length;
 };
 
 // Check if the specified cell is taken
-Grid.prototype.cellAvailable = function (cell) {
+Board.prototype.cellAvailable = function (cell) {
   return !this.cellOccupied(cell);
 };
 
-Grid.prototype.cellOccupied = function (cell) {
+Board.prototype.cellOccupied = function (cell) {
   return !!this.cellContent(cell);
 };
 
-Grid.prototype.cellContent = function (cell) {
+Board.prototype.cellContent = function (cell) {
   if (this.withinBounds(cell)) {
     return this.cells[cell.x][cell.y];
   } else {
@@ -301,15 +303,15 @@ Grid.prototype.cellContent = function (cell) {
 };
 
 // Inserts a tile at its position
-Grid.prototype.insertTile = function (tile) {
+Board.prototype.insertTile = function (tile) {
   this.cells[tile.x][tile.y] = tile;
 };
 
-Grid.prototype.removeTile = function (tile) {
+Board.prototype.removeTile = function (tile) {
   this.cells[tile.x][tile.y] = null;
 };
 
-Grid.prototype.withinBounds = function (position) {
+Board.prototype.withinBounds = function (position) {
   return position.x >= 0 && position.x < this.size &&
          position.y >= 0 && position.y < this.size;
 };
@@ -422,24 +424,33 @@ const getElements = (gm) => {
 const Game = (props) => {
   const gameManager = useRef(getInitialGameManager(props.size));
   const [elements, setElements] = useState(getElements(gameManager.current));
-  const move = (event) => {
-    var d = mapkeys[event.key];
+  const move = (key) => {
+    var d = mapkeys[key];
     gameManager.current.move(d);
     setElements(getElements(gameManager.current));
   }
   return (
-  <div>
-    <KeyboardEventHandler
-      handleKeys={['up', 'down', 'left', 'right']}
-      onKeyEvent={(key, e) => move({key})}
-    />
-    <GridContainer />
-    <div class="tile-container"> {
-      elements.map(element =>
-        <div key={element.id} className={element.classes}>{element.value}</div>
-      )
-    } </div>
-  </div>
+  <Grid container direction="row"  justify="center" alignItems="center">
+    <Grid item xs={12}>
+      <Typography variant='h2' style={{
+        fontFamily: "Clear Sans, Helvetica Neue, Arial, sans-serif",
+        fontWeight: 700 }}>2048</Typography>
+    </Grid>
+    <Grid item>
+      <Paper style={{ width: '494px', height: '494px', padding: 12 }}>
+        <KeyboardEventHandler
+          handleKeys={['up', 'down', 'left', 'right']}
+          onKeyEvent={(key, e) => move(key)}
+        />
+        <GridContainer />
+        <div class="tile-container"> {
+          elements.map(element =>
+            <div key={element.id} className={element.classes} style={{ color: (element.value>4)?'white':'#776E65'}}>{element.value}</div>
+          )
+        } </div>
+      </Paper>
+    </Grid>
+  </Grid>
   )
 }
 
