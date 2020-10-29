@@ -388,10 +388,8 @@ const addTile = (elements, tile) => {
 
   if (tile.previousPosition) {
     // Make sure that the tile gets rendered in the previous position first
-    /*requestAnimationFrame(function () {*/
-      classes[2] = positionClass({ x: tile.x, y: tile.y });
-      /* self.applyClasses(element, classes); // Update the position */
-    /*});*/
+    classes[2] = positionClass({ x: tile.x, y: tile.y });
+    /* self.applyClasses(element, classes); // Update the position */
   } else if (tile.mergedFrom) {
     classes.push("tile-merged");
     /* this.applyClasses(element, classes); */
@@ -418,21 +416,16 @@ const getElements = (gm) => {
       }
     });
   });
-  return elements.map(element =>
-    <div key={element.id} className={element.classes}>{element.value}</div>
-  )
+  return elements;
 }
 
 const Game = (props) => {
   const gameManager = useRef(getInitialGameManager(props.size));
   const [elements, setElements] = useState(getElements(gameManager.current));
-  const requestRef = useRef();
   const move = (event) => {
-    requestRef.current = requestAnimationFrame(() => {
-      var d = mapkeys[event.key];
-      gameManager.current.move(d);
-      setElements(getElements(gameManager.current));
-    });
+    var d = mapkeys[event.key];
+    gameManager.current.move(d);
+    setElements(getElements(gameManager.current));
   }
   return (
   <div>
@@ -442,8 +435,9 @@ const Game = (props) => {
     />
     <GridContainer />
     <div class="tile-container"> {
-      /* elements.map(element => <div className={element.classes}>{element.value}</div>) */
-      elements
+      elements.map(element =>
+        <div key={element.id} className={element.classes}>{element.value}</div>
+      )
     } </div>
   </div>
   )
