@@ -2,7 +2,7 @@ archetype competition
 
 variable organizer : role = @tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg
 
-variable prize : tez = 1000tz
+variable prize : tez = 10tz
 
 constant oracle : key = "edpkurLzuFFL1XyP3fed4u7MsgeywQoQmHM45Bz91PBzDvUjQ9bvdn"
 
