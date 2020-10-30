@@ -20,22 +20,22 @@ const Competition = (props) => {
         paddingLeft: 15,
         paddingTop: 15,
         overflow: 'scroll' }}>
-        <Grid item xs={2} style={{ padding: 10 }}>
+        <Grid item xs={3} style={{ padding: 10 }}>
           <Typography color='textSecondary'>Account:</Typography>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={9}>
           <Typography style={{
             fontFamily: 'Courier Prime, monospace'
           }}>tz1dZydwVDuz6SH5jCUfCQjqV8YCQimL9GCp
           </Typography>
         </Grid>
-        <Grid item xs={2} style={{ padding: 10 }}>
-          <Typography color='textSecondary'>Session:</Typography>
+        <Grid item xs={3} style={{ padding: 10 }}>
+          <Typography color='textSecondary'>Session id:</Typography>
         </Grid>
-        <Grid item xs={10}>
+        <Grid item xs={9}>
           <Typography style={{
             fontFamily: 'Courier Prime, monospace'
-          }}>sdfsmrlk23R3EFQSC2A4T4ZTRAF2df3A4ZEFVZ54
+          }}>{props.session}
           </Typography>
         </Grid>
       </Grid>
@@ -46,7 +46,7 @@ const Competition = (props) => {
         backgroundPosition: 'right 50% top 220px',
       }}>
         <Grid item>
-          <Typography color='textSecondary' style={{ fontWeight: 700, padding: 10 }}>Actions</Typography>
+          <Typography color='textSecondary' style={{ fontWeight: 700, padding: 10 }}>Session actions</Typography>
         </Grid>
         <Grid item style={{ width: '100%' }}>
           <Divider></Divider>
