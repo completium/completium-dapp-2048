@@ -6,7 +6,7 @@ variable organizer : role = @tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg
 variable startdate : date = now
 
 (* deadline *)
-variable deadline : date = now + 10m
+variable deadline : date = now + 1w
 
 variable prize : tez = 1000tz
 
