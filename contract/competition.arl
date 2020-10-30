@@ -53,6 +53,7 @@ entry submit (packed_score : bytes, signed_score : signature) {
 }
 
 transition decide () {
+  called by organizer
   from InProgress
   to Done
   with effect {
