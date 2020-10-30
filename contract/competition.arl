@@ -48,9 +48,10 @@ entry submit (packed_score : bytes, signed_score : signature) {
     if check_signature(oracle, signed_score, packed_score) then (
       match_option unpack<nat>(packed_score) with
       | some(s) ->
-        submission.add ({ competitor = caller;
-                          score = s;
-                          timestamp = now })
+        submission.addupdate(caller, {
+          score = s;
+          timestamp = now
+        })
       | none -> fail("cannot unpack score")
       end
     ) else fail("not signed by oracle");
