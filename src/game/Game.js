@@ -441,6 +441,8 @@ const Game = (props) => {
       setMsg('Game Over');
     } else if (gameManager.current.over) {
       setMsg('You Win!');
+    } else {
+      props.handleKey(key);
     }
   }
   const restart = () => {
@@ -448,6 +450,7 @@ const Game = (props) => {
     setElements(getElements(gameManager.current));
     setScore({ score: 0, delta: 0});
     setMsg(null);
+    props.handleKey('');
   }
   return (
   <Grid container direction="row"  justify="center" alignItems="center" style={{ width: '494px' }}>
