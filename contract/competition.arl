@@ -11,13 +11,13 @@ asset submission {
   score      : nat;
   timestamp  : date;
 } initialized by {
-  { @tz1ZXf37ZNfVupt5GVyrPJ76q8kbjFuD2z7R; 235;   now };
+  { @tz1ZXf37ZNfVupt5GVyrPJ76q8kbjFuD2z7R; 236;   now };
   { @tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg; 5432;  now };
-  { @tz1ZAQXACaEqryobpBoLbJUc2DjG5ZzrhARu; 873;   now };
-  { @tz1YwPJUNoU9qQTtFtsg6mjWUGSkXtf2uDHc; 1643;  now };
-  { @tz1XZ7s6uStC2hZVpPQhXgcdXPwxifByF3Ao; 15623; now };
+  { @tz1ZAQXACaEqryobpBoLbJUc2DjG5ZzrhARu; 874;   now };
+  { @tz1YwPJUNoU9qQTtFtsg6mjWUGSkXtf2uDHc; 1644;  now };
+  { @tz1XZ7s6uStC2hZVpPQhXgcdXPwxifByF3Ao; 15624; now };
   { @tz1UUHt41ukVHcamQ5YZgGWsm6mXasVBt6Ln; 10354; now };
-  { @tz1cck7sNvM3TWkUA9VGWnyBW44uxMLz9vGg; 687;   now }
+  { @tz1cck7sNvM3TWkUA9VGWnyBW44uxMLz9vGg; 688;   now }
 }
 
 (* state machine *)
