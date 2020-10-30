@@ -2,12 +2,6 @@ archetype competition
 
 variable organizer : role = @tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg
 
-(* start date *)
-variable startdate : date = now
-
-(* deadline *)
-variable deadline : date = now + 1w
-
 variable prize : tez = 1000tz
 
 constant oracle : key = "edpkurLzuFFL1XyP3fed4u7MsgeywQoQmHM45Bz91PBzDvUjQ9bvdn"
@@ -34,14 +28,14 @@ states =
  | Closed
 
 transition confirm () {
+  called by organizer
   from Created
-  to InProgress when { now > startdate and transferred = prize }
+  to InProgress when { transferred = prize }
 }
 
 entry submit (packed_score : bytes, signed_score : signature) {
   require {
     c1 : state = InProgress;
-    c2 : now <= deadline;
   }
 
   effect {
@@ -59,9 +53,6 @@ entry submit (packed_score : bytes, signed_score : signature) {
 }
 
 transition decide () {
-  require {
-    c3 : now > deadline;
-  }
   from InProgress
   to Done
   with effect {
