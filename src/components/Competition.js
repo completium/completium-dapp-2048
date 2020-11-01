@@ -1,19 +1,113 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import { Divider } from '@material-ui/core';
-import { records } from '../settings';
+import { Divider, LinearProgress } from '@material-ui/core';
+import { useReady, useAccountPkh } from '../dapp.js';
+import { InMemorySigner } from '@taquito/signer';
 
 import Actions from './Actions';
 
 import useWindowDimensions from './WindowDimensions';
 
+const Encrypt = (props) => {
+  const ready = useReady();
+  const handleEncrypt = () => {
+    var oracle = new InMemorySigner('edsk3BksmijaVkBoi485CHA7X9pDfexAwSWiQum6WAHNaLot2SXfyW');
+    oracle.sign('12342').then(s => {
+      console.log(`signed: ${s.sbytes}`);
+      console.log(`sig: ${s.sig}`);
+      console.log(`prefix: ${s.prefixSig}`);
+      props.setSigned(s.sig);
+    });
+  }
+  if (props.signed === null) {
+    return (
+    <Grid item style={{ marginTop: 30, marginBottom: 30 }}>
+      <Button
+        variant='contained'
+        color='secondary'
+        disableElevation
+        onClick={handleEncrypt}>
+        compute & encrypt score
+      </Button>
+    </Grid>);
+  } else {
+    return (
+    <Grid item>
+      <Grid container="column" justify="center" alignItems="center">
+        <Grid item>
+          <Typography style={{
+            paddingTop: 30,
+            paddingBottom: 6,
+            fontFamily: 'Courier Prime, monospace'
+          }}>{props.signed.substring(0,50)+'...'}</Typography>
+        </Grid>
+        <Grid item>
+          <Button variant='contained' color='secondary' disableElevation disabled={!ready}>submit</Button>
+        </Grid>
+      </Grid>
+    </Grid>);
+  }
+}
+
+const LeaderBoard = (props) => {
+  return (
+    <Grid container direction="row" justify="center" alignItems="center" style={{
+      height: props.height,
+      overflow: 'scroll'
+    }}>
+      <Grid item xs={2} style={{
+        paddingLeft: 20,
+        fontWeight: 700,
+        textAlign: 'center'
+      }}><Typography color='textSecondary'>Rank</Typography></Grid>
+      <Grid item xs={2} style={{
+        paddingLeft: 10,
+        fontWeight: 700
+      }}><Typography color='textSecondary'>Score</Typography></Grid>
+      <Grid item xs={8} style={{
+        paddingLeft: 10,
+        fontWeight: 700,
+        textAlign: 'center'
+      }}><Typography color='textSecondary'>Account</Typography></Grid>
+      <Grid item xs={12}> {
+      props.records.map(record =>
+        <Grid container direction="row" justify="center" alignItems="center" style={{
+          padding: 12,
+          paddingLeft: 0,
+          paddingRight: 0
+        }}>
+          <Grid item xs={2}>
+            <Typography style={{ textAlign: 'center'}}>#{record.rank}</Typography>
+          </Grid>
+          <Grid item xs={2}>
+            <Typography style={{ marginRight: 10}}>{record.score}</Typography>
+          </Grid>
+          <Grid item xs={8}>
+            <Typography style={{
+              fontFamily: 'Courier Prime, monospace'
+            }}>{record.account}</Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <Divider></Divider>
+          </Grid>
+        </Grid>)}
+      </Grid>
+    </Grid>
+  )
+}
+
 const Competition = (props) => {
+  const ready = useReady();
+  const address = useAccountPkh();
+  console.log(`ready : ${ready}`);
+  console.log(`address : ${address+''}`);
   const { height, width } = useWindowDimensions();
   const leaderBoardHeight = (height - 550)+'px';
-  console.log(leaderBoardHeight);
+  const leaderBoardWidth = (Math.floor(0.3*width))+'px';
+  console.log(`record : ${props.records}`);
   return (
     <Paper elevation='0' square style={{ paddingTop: 10 }}>
       <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2} style={{
@@ -24,10 +118,14 @@ const Competition = (props) => {
           <Typography color='textSecondary'>Account:</Typography>
         </Grid>
         <Grid item xs={9}>
-          <Typography style={{
+          {(ready)? (<Typography style={{
             fontFamily: 'Courier Prime, monospace'
-          }}>tz1dZydwVDuz6SH5jCUfCQjqV8YCQimL9GCp
+          }}>{address}
           </Typography>
+          ):(
+            <div></div>
+          )
+          }
         </Grid>
         <Grid item xs={3} style={{ padding: 10 }}>
           <Typography color='textSecondary'>Session id:</Typography>
@@ -60,9 +158,7 @@ const Competition = (props) => {
         <Grid item>
           <Typography color='textSecondary'>{props.arrows.length}</Typography>
         </Grid>
-        <Grid item style={{ marginTop: 30, marginBottom: 30 }}>
-          <Button variant='contained' color='secondary' disableElevation>compute & encrypt score</Button>
-        </Grid>
+       <Encrypt signed={props.signed} setSigned={props.setSigned}/>
         <Grid item>
           <Typography color='textSecondary' style={{
             fontWeight: 700,
@@ -71,47 +167,17 @@ const Competition = (props) => {
           }}>Leader Board
           </Typography>
         </Grid>
-        <Grid container direction="row" justify="center" alignItems="center" style={{
-          height: leaderBoardHeight,
-          overflow: 'scroll'
-        }}>
-          <Grid item xs={2} style={{
-            paddingLeft: 20,
-            fontWeight: 700
-          }}><Typography color='textSecondary'>Rank</Typography></Grid>
-          <Grid item xs={2} style={{
-            paddingLeft: 10,
-            fontWeight: 700
-          }}><Typography color='textSecondary'>Score</Typography></Grid>
-          <Grid item xs={8} style={{
-            paddingLeft: 10,
-            fontWeight: 700
-          }}><Typography color='textSecondary'>Account</Typography></Grid>
-        {
-          records.map(record =>
-          <Grid container direction="row" justify="center" alignItems="center" style={{
-            padding: 12,
-            paddingLeft: 20
-          }}>
-            <Grid item xs={2}>
-              <Typography>#1</Typography>
-            </Grid>
-            <Grid item xs={2}>
-              <Typography>{record.score}</Typography>
-            </Grid>
-            <Grid item xs={8}>
-              <Typography style={{
-                fontFamily: 'Courier Prime, monospace'
-              }}>{record.account}</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Divider></Divider>
-            </Grid>
-          </Grid>)
-        }
+        <Grid item xs={12}>
+          { (props.records === null)? (
+            <div style={{ marginTop: 40, height: 40, width: leaderBoardWidth }}>
+                <LinearProgress color='secondary'></LinearProgress>
+              </div>
+            ) : (
+              <LeaderBoard height={leaderBoardHeight} records={props.records} />
+            )
+          }
         </Grid>
       </Grid>
-
     </Paper>
   )
 }

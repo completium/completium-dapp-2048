@@ -123,6 +123,7 @@ const Game = (props) => {
     setMsg(null);
     props.handleKey('');
     props.newSession();
+    props.setSigned(null);
   }
   return (
   <Grid container direction="row"  justify="center" alignItems="center" style={{ width: '494px' }}>
