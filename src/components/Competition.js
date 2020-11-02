@@ -23,7 +23,7 @@ const Encrypt = (props) => {
   const tezos = useTezos();
   const accountAddress = useAccountPkh();
   const handleEncrypt = () => {
-    var oracle = new InMemorySigner('edsk3BksmijaVkBoi485CHA7X9pDfexAwSWiQum6WAHNaLot2SXfyW');
+    var oracle = new InMemorySigner('edsk3eFocAKYDy2GfkFXFnj19ocDFwJ4M4cvrPURgaeyWp19LFzvHE');
     var nonce = new Uint8Array(8);
     window.crypto.getRandomValues(nonce);
     console.log(`score: ${props.score.score}`);
