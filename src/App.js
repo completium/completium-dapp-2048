@@ -36,6 +36,7 @@ const PageRouter = (props) => {
   const [session, setSession] = useState(null);
   const [records, setRecords] = useState(null);
   const [signed, setSigned] = useState(null);
+  const [score, setScore] = useState({ score: 0, delta: 0});
   const GameServerRef = useRef(new GameServer());
   const handleKey = (key) => {
     var a = [...arrows];
@@ -109,12 +110,21 @@ const PageRouter = (props) => {
                 handleKey={handleKey}
                 newSession={newSession}
                 next={GameServerRef.current.next}
-                setSigned={setSigned}/>
+                setSigned={setSigned}
+                setScore={setScore}
+                score={score}
+              />
             </Grid>
           </Grid>
         </Grid>
         <Grid item xs={4}>
-          <Competition arrows={arrows} session={session} records={records} signed={signed} setSigned={setSigned}/>
+          <Competition
+            arrows={arrows}
+            session={session}
+            records={records}
+            signed={signed}
+            setSigned={setSigned}
+            score={score}/>
         </Grid>
       </Grid>
     </ThemeProvider>

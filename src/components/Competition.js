@@ -15,7 +15,8 @@ const Encrypt = (props) => {
   const ready = useReady();
   const handleEncrypt = () => {
     var oracle = new InMemorySigner('edsk3BksmijaVkBoi485CHA7X9pDfexAwSWiQum6WAHNaLot2SXfyW');
-    oracle.sign('12342').then(s => {
+    oracle.sign(props.score.score.toString(16)).then(s => {
+      console.log(`score: ${props.score.score.toString(16)}`);
       console.log(`signed: ${s.sbytes}`);
       console.log(`sig: ${s.sig}`);
       console.log(`prefix: ${s.prefixSig}`);
@@ -102,12 +103,9 @@ const LeaderBoard = (props) => {
 const Competition = (props) => {
   const ready = useReady();
   const address = useAccountPkh();
-  console.log(`ready : ${ready}`);
-  console.log(`address : ${address+''}`);
   const { height, width } = useWindowDimensions();
   const leaderBoardHeight = (height - 550)+'px';
   const leaderBoardWidth = (Math.floor(0.3*width))+'px';
-  console.log(`record : ${props.records}`);
   return (
     <Paper elevation='0' square style={{ paddingTop: 10 }}>
       <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2} style={{
@@ -158,7 +156,7 @@ const Competition = (props) => {
         <Grid item>
           <Typography color='textSecondary'>{props.arrows.length}</Typography>
         </Grid>
-       <Encrypt signed={props.signed} setSigned={props.setSigned}/>
+       <Encrypt signed={props.signed} setSigned={props.setSigned} score={props.score}/>
         <Grid item>
           <Typography color='textSecondary' style={{
             fontWeight: 700,

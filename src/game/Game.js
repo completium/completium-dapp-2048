@@ -98,7 +98,6 @@ const getElements = (gm) => {
 const Game = (props) => {
   const gameManager = useRef(getInitialGameManager(1976, props.size));
   const [elements, setElements] = useState(getElements(gameManager.current));
-  const [score, setScore] = useState({ score: 0, delta: 0});
   const [msg, setMsg] = useState(null);
   const move = (key) => {
     var d = mapkeys[key];
@@ -107,10 +106,10 @@ const Game = (props) => {
     var newscore = gameManager.current.score;
     var delta = newscore - score;
     setElements(getElements(gameManager.current));
-    setScore({ score: newscore, delta: delta });
+    props.setScore({ score: newscore, delta: delta });
     if (gameManager.current.over) {
       setMsg('Game Over');
-    } else if (gameManager.current.over) {
+    } else if (gameManager.current.won) {
       setMsg('You Win!');
     } else {
       props.handleKey(key);
@@ -119,7 +118,7 @@ const Game = (props) => {
   const restart = () => {
     gameManager.current = getInitialGameManager(1976, props.size);
     setElements(getElements(gameManager.current));
-    setScore({ score: 0, delta: 0});
+    props.setScore({ score: 0, delta: 0});
     setMsg(null);
     props.handleKey('');
     props.newSession();
@@ -136,7 +135,7 @@ const Game = (props) => {
       }}> Join the numbers and get to the <b>2048 tile</b>!</Typography>
     </Grid>
     <Grid item xs={3}>
-      <Score score={score} />
+      <Score score={props.score} />
     </Grid>
     <Grid item>
       <Paper style={{ width: '494px', height: '494px', padding: 12 }}>
