@@ -4,7 +4,7 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { Divider, LinearProgress } from '@material-ui/core';
-import { useReady, useAccountPkh, useTezos } from '../dapp.js';
+import { useReady, useAccountPkh, useTezos } from '../dapp.js';
 import { InMemorySigner } from '@taquito/signer';
 import { contractAddress } from '../settings.js';
 import { Tezos } from '@taquito/taquito';
@@ -27,7 +27,21 @@ const Encrypt = (props) => {
     window.crypto.getRandomValues(nonce);
     console.log(`score: ${props.score.score}`);
     Tezos.setProvider({ rpc: 'https://testnet-tezos.giganode.io/' });
-    Tezos.rpc.packData({ data: { int: props.score.score.toString() }, type: { prim: "nat" } }).then(wrappedPacked => {
+    Tezos.rpc.packData({
+      data: {
+        prim: "Pair",
+        args: [
+          { string: "tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg" },
+          { int: props.score.score.toString() }
+        ]
+      }, type: {
+        prim: "pair",
+        args: [
+          { prim: "address" },
+          { prim: "nat" }
+        ]
+      }
+    }).then(wrappedPacked => {
       const hexScore = wrappedPacked.packed;
       oracle.sign(hexScore).then(s => {
         console.log(`score: ${props.score.score.toString(16)}`);
@@ -40,7 +54,7 @@ const Encrypt = (props) => {
   }
   const submit = () => {
     tezos.wallet.at(contractAddress).then(contract => {
-      contract.methods.submit(props.signed.packed, props.signed.value).send().then( op => {
+      contract.methods.submit(props.signed.packed, props.signed.value).send().then(op => {
         props.openSnack();
         op.receipt().then(() => {
           props.closeSnack();
@@ -51,39 +65,39 @@ const Encrypt = (props) => {
   }
   if (props.signed.value === null) {
     return (
-    <Grid item style={{ marginTop: 30, marginBottom: 30 }}>
-      <Button
-        variant='contained'
-        color='secondary'
-        disableElevation
-        onClick={handleEncrypt}>
-        compute & encrypt score
+      <Grid item style={{ marginTop: 30, marginBottom: 30 }}>
+        <Button
+          variant='contained'
+          color='secondary'
+          disableElevation
+          onClick={handleEncrypt}>
+          compute & encrypt score
       </Button>
-    </Grid>);
+      </Grid>);
   } else {
     return (
-    <Grid item>
-      <Grid container="column" justify="center" alignItems="center">
-        <Grid item>
-          <Typography style={{
-            paddingTop: 30,
-            paddingBottom: 6,
-            fontFamily: 'Courier Prime, monospace'
-          }}>{props.signed.value.substring(0,50)+'...'}</Typography>
-        </Grid>
-        <Grid item>
-          <Button
-            variant='contained'
-            color='secondary'
-            disableElevation
-            disabled={!ready}
-            onClick={submit}
-          >
-            submit
+      <Grid item>
+        <Grid container="column" justify="center" alignItems="center">
+          <Grid item>
+            <Typography style={{
+              paddingTop: 30,
+              paddingBottom: 6,
+              fontFamily: 'Courier Prime, monospace'
+            }}>{props.signed.value.substring(0, 50) + '...'}</Typography>
+          </Grid>
+          <Grid item>
+            <Button
+              variant='contained'
+              color='secondary'
+              disableElevation
+              disabled={!ready}
+              onClick={submit}
+            >
+              submit
           </Button>
+          </Grid>
         </Grid>
-      </Grid>
-    </Grid>);
+      </Grid>);
   }
 }
 
@@ -108,27 +122,27 @@ const LeaderBoard = (props) => {
         textAlign: 'center'
       }}><Typography color='textSecondary'>Account</Typography></Grid>
       <Grid item xs={12}> {
-      props.records.map(record =>
-        <Grid container direction="row" justify="center" alignItems="center" style={{
-          padding: 12,
-          paddingLeft: 0,
-          paddingRight: 0
-        }}>
-          <Grid item xs={2}>
-            <Typography style={{ textAlign: 'center'}}>#{record.rank}</Typography>
-          </Grid>
-          <Grid item xs={2}>
-            <Typography style={{ marginRight: 10}}>{record.score}</Typography>
-          </Grid>
-          <Grid item xs={8}>
-            <Typography style={{
-              fontFamily: 'Courier Prime, monospace'
-            }}>{record.account}</Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Divider></Divider>
-          </Grid>
-        </Grid>)}
+        props.records.map(record =>
+          <Grid container direction="row" justify="center" alignItems="center" style={{
+            padding: 12,
+            paddingLeft: 0,
+            paddingRight: 0
+          }}>
+            <Grid item xs={2}>
+              <Typography style={{ textAlign: 'center' }}>#{record.rank}</Typography>
+            </Grid>
+            <Grid item xs={2}>
+              <Typography style={{ marginRight: 10 }}>{record.score}</Typography>
+            </Grid>
+            <Grid item xs={8}>
+              <Typography style={{
+                fontFamily: 'Courier Prime, monospace'
+              }}>{record.account}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Divider></Divider>
+            </Grid>
+          </Grid>)}
       </Grid>
     </Grid>
   )
@@ -138,28 +152,29 @@ const Competition = (props) => {
   const ready = useReady();
   const address = useAccountPkh();
   const { height, width } = useWindowDimensions();
-  const leaderBoardHeight = (height - 550)+'px';
-  const leaderBoardWidth = (Math.floor(0.3*width))+'px';
+  const leaderBoardHeight = (height - 550) + 'px';
+  const leaderBoardWidth = (Math.floor(0.3 * width)) + 'px';
   return (
     <Paper elevation='0' square style={{ paddingTop: 10 }}>
       <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2} style={{
         paddingLeft: 15,
         paddingTop: 15,
-        overflow: 'scroll' }}>
-        <Grid item xs={3} style={{ padding: 10 }}>
+        overflow: 'scroll'
+      }}>
+        <Grid item xs={3} style={{ padding: 10 }}>
           <Typography color='textSecondary'>Account:</Typography>
         </Grid>
         <Grid item xs={9}>
-          {(ready)? (<Typography style={{
+          {(ready) ? (<Typography style={{
             fontFamily: 'Courier Prime, monospace'
           }}>{address}
           </Typography>
-          ):(
-            <div></div>
-          )
+          ) : (
+              <div></div>
+            )
           }
         </Grid>
-        <Grid item xs={3} style={{ padding: 10 }}>
+        <Grid item xs={3} style={{ padding: 10 }}>
           <Typography color='textSecondary'>Session id:</Typography>
         </Grid>
         <Grid item xs={9}>
@@ -171,8 +186,8 @@ const Competition = (props) => {
       </Grid>
       <Grid container direction="column" justify="center" alignItems="center" style={{
         marginTop: 20,
-        backgroundImage : "url(" + process.env.PUBLIC_URL + '/podium.svg)',
-        backgroundRepeat  : 'no-repeat',
+        backgroundImage: "url(" + process.env.PUBLIC_URL + '/podium.svg)',
+        backgroundRepeat: 'no-repeat',
         backgroundPosition: 'right 50% top 220px',
       }}>
         <Grid item>
@@ -208,11 +223,11 @@ const Competition = (props) => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          { (props.records === null)? (
+          {(props.records === null) ? (
             <div style={{ marginTop: 40, height: 40, width: leaderBoardWidth }}>
-                <LinearProgress color='secondary'></LinearProgress>
-              </div>
-            ) : (
+              <LinearProgress color='secondary'></LinearProgress>
+            </div>
+          ) : (
               <LeaderBoard height={leaderBoardHeight} records={props.records} />
             )
           }

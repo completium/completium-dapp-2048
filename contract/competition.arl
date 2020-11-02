@@ -42,11 +42,11 @@ entry submit (packed_score : bytes, signed_score : signature) {
 
   effect {
     if check_signature(oracle, signed_score, packed_score) then (
-      var packed = slice(packed_score,noncelength,abs(length(packed_score)-noncelength));
-      match_option unpack<nat>(packed) with
+      match_option unpack<address * nat>(packed_score) with
       | some(s) ->
+        if (s[0] <> caller) then fail ("BadCaller");
         submission.addupdate(caller, {
-          score = s;
+          score = s[1];
           timestamp = now
         })
       | none -> fail("cannot unpack score")
