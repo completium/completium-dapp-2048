@@ -96,7 +96,7 @@ const getElements = (gm) => {
 }
 
 const Game = (props) => {
-  const gameManager = useRef(getInitialGameManager(1976, props.size));
+  const gameManager = useRef(getInitialGameManager(Math.random(), props.size));
   const [elements, setElements] = useState(getElements(gameManager.current));
   const [msg, setMsg] = useState(null);
   const move = (key) => {
@@ -116,7 +116,7 @@ const Game = (props) => {
     }
   }
   const restart = () => {
-    gameManager.current = getInitialGameManager(1976, props.size);
+    gameManager.current = getInitialGameManager(Math.random(), props.size);
     setElements(getElements(gameManager.current));
     props.setScore({ score: 0, delta: 0});
     setMsg(null);
