@@ -26,18 +26,17 @@ const Encrypt = (props) => {
     var nonce = new Uint8Array(8);
     window.crypto.getRandomValues(nonce);
     console.log(`score: ${props.score.score}`);
-    var hexScore = props.score.score.toString(16);
-    oracle.sign(hexScore).then(s => {
-      console.log(`score: ${props.score.score.toString(16)}`);
-      console.log(`signed: ${s.sbytes}`);
-      console.log(`sig: ${s.sig}`);
-      console.log(`prefix: ${s.prefixSig}`);
-      Tezos.setProvider({rpc: 'https://testnet-tezos.giganode.io/'});
-      Tezos.rpc.packData({ data: { int: props.score.score.toString() }, type: { prim: "nat" } }).then(wrappedPacked => {
-        console.log(wrappedPacked.packed);
-        props.setSigned({ packed: wrappedPacked.packed, value: s.sig});
-      })
-    });
+    Tezos.setProvider({ rpc: 'https://testnet-tezos.giganode.io/' });
+    Tezos.rpc.packData({ data: { int: props.score.score.toString() }, type: { prim: "nat" } }).then(wrappedPacked => {
+      const hexScore = wrappedPacked.packed;
+      oracle.sign(hexScore).then(s => {
+        console.log(`score: ${props.score.score.toString(16)}`);
+        console.log(`signed: ${s.sbytes}`);
+        console.log(`sig: ${s.sig}`);
+        console.log(`prefix: ${s.prefixSig}`);
+        props.setSigned({ packed: wrappedPacked.packed, value: s.prefixSig });
+      });
+    })
   }
   const submit = () => {
     tezos.wallet.at(contractAddress).then(contract => {
