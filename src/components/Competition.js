@@ -21,6 +21,7 @@ const toHexString = bytes =>
 const Encrypt = (props) => {
   const ready = useReady();
   const tezos = useTezos();
+  const accountAddress = useAccountPkh();
   const handleEncrypt = () => {
     var oracle = new InMemorySigner('edsk3BksmijaVkBoi485CHA7X9pDfexAwSWiQum6WAHNaLot2SXfyW');
     var nonce = new Uint8Array(8);
@@ -31,7 +32,7 @@ const Encrypt = (props) => {
       data: {
         prim: "Pair",
         args: [
-          { string: "tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg" },
+          { string: accountAddress },
           { int: props.score.score.toString() }
         ]
       }, type: {
@@ -60,7 +61,7 @@ const Encrypt = (props) => {
           props.closeSnack();
           props.loadRecords();
         });
-      });
+      }).catch(e => console.log(e));
     });
   }
   if (props.signed.value === null) {
@@ -70,7 +71,9 @@ const Encrypt = (props) => {
           variant='contained'
           color='secondary'
           disableElevation
-          onClick={handleEncrypt}>
+          onClick={handleEncrypt}
+          disabled={!ready || props.score.score < 16 }
+        >
           compute & encrypt score
       </Button>
       </Grid>);
@@ -90,7 +93,7 @@ const Encrypt = (props) => {
               variant='contained'
               color='secondary'
               disableElevation
-              disabled={!ready}
+              disabled={!ready || props.status === 0}
               onClick={submit}
             >
               submit
@@ -213,6 +216,7 @@ const Competition = (props) => {
           openSnack={props.openSnack}
           closeSnack={props.closeSnack}
           loadRecords={props.loadRecords}
+          status={props.status}
         />
         <Grid item>
           <Typography color='textSecondary' style={{

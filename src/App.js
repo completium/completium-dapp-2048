@@ -36,6 +36,7 @@ const PageRouter = (props) => {
   const [arrows, setArrows] = useState([]);
   const [session, setSession] = useState(null);
   const [records, setRecords] = useState(null);
+  const [status, setStatus] = useState(0);
   const [signed, setSigned] = useState({ packed: null, value: null});
   const [score, setScore] = useState({ score: 0, delta: 0});
   const [viewSnack, setViewSnack] = React.useState(false);
@@ -92,6 +93,7 @@ const PageRouter = (props) => {
         });
       });
       setRecords(sortByScore(recs));
+      setStatus(parseInt('0'+cstorage._state));
     } catch (error) {
       console.log(`Error: ${error}`);
     }
@@ -122,8 +124,6 @@ const PageRouter = (props) => {
                 setScore={setScore}
                 score={score}
                 signed={signed}
-                openSnack={openSnack}
-                closeSnack={closeSnack}
                 loadRecords={loadRecords}
               />
             </Grid>
@@ -136,7 +136,12 @@ const PageRouter = (props) => {
             records={records}
             signed={signed}
             setSigned={setSigned}
-            score={score}/>
+            score={score}
+            openSnack={openSnack}
+            closeSnack={closeSnack}
+            loadRecords={loadRecords}
+            status={status}
+          />
         </Grid>
       </Grid>
       <SnackMsg open={viewSnack} theme={theme} />
