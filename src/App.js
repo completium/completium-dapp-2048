@@ -11,6 +11,7 @@ import Competition from './components/Competition';
 import { GameServer } from './server/GameServer';
 import { Tezos } from '@taquito/taquito';
 import { DAppProvider, useConnect } from './dapp.js';
+import SnackMsg from './components/SnackMsg';
 
 function App() {
   return (
@@ -35,8 +36,9 @@ const PageRouter = (props) => {
   const [arrows, setArrows] = useState([]);
   const [session, setSession] = useState(null);
   const [records, setRecords] = useState(null);
-  const [signed, setSigned] = useState(null);
+  const [signed, setSigned] = useState({ packed: null, value: null});
   const [score, setScore] = useState({ score: 0, delta: 0});
+  const [viewSnack, setViewSnack] = React.useState(false);
   const GameServerRef = useRef(new GameServer());
   const handleKey = (key) => {
     var a = [...arrows];
@@ -97,6 +99,12 @@ const PageRouter = (props) => {
   if (records === null) {
     loadRecords();
   }
+  const openSnack = () => {
+    setViewSnack(true);
+  }
+  const closeSnack = () => {
+    setViewSnack(false);
+  }
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline/>
@@ -113,6 +121,10 @@ const PageRouter = (props) => {
                 setSigned={setSigned}
                 setScore={setScore}
                 score={score}
+                signed={signed}
+                openSnack={openSnack}
+                closeSnack={closeSnack}
+                loadRecords={loadRecords}
               />
             </Grid>
           </Grid>
@@ -127,6 +139,7 @@ const PageRouter = (props) => {
             score={score}/>
         </Grid>
       </Grid>
+      <SnackMsg open={viewSnack} theme={theme} />
     </ThemeProvider>
   )
 }

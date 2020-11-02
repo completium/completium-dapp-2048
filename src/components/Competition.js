@@ -4,28 +4,53 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import { Divider, LinearProgress } from '@material-ui/core';
-import { useReady, useAccountPkh } from '../dapp.js';
+import { useReady, useAccountPkh, useTezos } from '../dapp.js';
 import { InMemorySigner } from '@taquito/signer';
+import { contractAddress } from '../settings.js';
+import { Tezos } from '@taquito/taquito';
 
 import Actions from './Actions';
 
 import useWindowDimensions from './WindowDimensions';
 
+const fromHexString = hexString =>
+  new Uint8Array(hexString.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+const toHexString = bytes =>
+  bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
+
 const Encrypt = (props) => {
   const ready = useReady();
+  const tezos = useTezos();
   const handleEncrypt = () => {
     var oracle = new InMemorySigner('edsk3BksmijaVkBoi485CHA7X9pDfexAwSWiQum6WAHNaLot2SXfyW');
-    var array = new Uint8Array(8);
-    window.crypto.getRandomValues(array);
-    oracle.sign(props.score.score.toString(16), array).then(s => {
+    var nonce = new Uint8Array(8);
+    window.crypto.getRandomValues(nonce);
+    console.log(`score: ${props.score.score}`);
+    var hexScore = props.score.score.toString(16);
+    oracle.sign(hexScore).then(s => {
       console.log(`score: ${props.score.score.toString(16)}`);
       console.log(`signed: ${s.sbytes}`);
       console.log(`sig: ${s.sig}`);
       console.log(`prefix: ${s.prefixSig}`);
-      props.setSigned(s.sig);
+      Tezos.setProvider({rpc: 'https://testnet-tezos.giganode.io/'});
+      Tezos.rpc.packData({ data: { int: props.score.score.toString() }, type: { prim: "nat" } }).then(wrappedPacked => {
+        console.log(wrappedPacked.packed);
+        props.setSigned({ packed: wrappedPacked.packed, value: s.sig});
+      })
     });
   }
-  if (props.signed === null) {
+  const submit = () => {
+    tezos.wallet.at(contractAddress).then(contract => {
+      contract.methods.submit(props.signed.packed, props.signed.value).send().then( op => {
+        props.openSnack();
+        op.receipt().then(() => {
+          props.closeSnack();
+          props.loadRecords();
+        });
+      });
+    });
+  }
+  if (props.signed.value === null) {
     return (
     <Grid item style={{ marginTop: 30, marginBottom: 30 }}>
       <Button
@@ -45,10 +70,18 @@ const Encrypt = (props) => {
             paddingTop: 30,
             paddingBottom: 6,
             fontFamily: 'Courier Prime, monospace'
-          }}>{props.signed.substring(0,50)+'...'}</Typography>
+          }}>{props.signed.value.substring(0,50)+'...'}</Typography>
         </Grid>
         <Grid item>
-          <Button variant='contained' color='secondary' disableElevation disabled={!ready}>submit</Button>
+          <Button
+            variant='contained'
+            color='secondary'
+            disableElevation
+            disabled={!ready}
+            onClick={submit}
+          >
+            submit
+          </Button>
         </Grid>
       </Grid>
     </Grid>);
@@ -158,7 +191,15 @@ const Competition = (props) => {
         <Grid item>
           <Typography color='textSecondary'>{props.arrows.length}</Typography>
         </Grid>
-       <Encrypt signed={props.signed} setSigned={props.setSigned} score={props.score}/>
+        <Encrypt
+          signed={props.signed}
+          setSigned={props.setSigned}
+          score={props.score}
+          signed={props.signed}
+          openSnack={props.openSnack}
+          closeSnack={props.closeSnack}
+          loadRecords={props.loadRecords}
+        />
         <Grid item>
           <Typography color='textSecondary' style={{
             fontWeight: 700,
