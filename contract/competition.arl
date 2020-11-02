@@ -6,6 +6,8 @@ variable prize : tez = 10tz
 
 constant oracle : key = "edpkurLzuFFL1XyP3fed4u7MsgeywQoQmHM45Bz91PBzDvUjQ9bvdn"
 
+constant noncelength : nat = 8
+
 asset submission {
   competitor : address;
   score      : nat;
@@ -40,7 +42,8 @@ entry submit (packed_score : bytes, signed_score : signature) {
 
   effect {
     if check_signature(oracle, signed_score, packed_score) then (
-      match_option unpack<nat>(packed_score) with
+      var packed = slice(packed_score,noncelength,abs(length(packed_score)-noncelength));
+      match_option unpack<nat>(packed) with
       | some(s) ->
         submission.addupdate(caller, {
           score = s;

@@ -15,7 +15,9 @@ const Encrypt = (props) => {
   const ready = useReady();
   const handleEncrypt = () => {
     var oracle = new InMemorySigner('edsk3BksmijaVkBoi485CHA7X9pDfexAwSWiQum6WAHNaLot2SXfyW');
-    oracle.sign(props.score.score.toString(16)).then(s => {
+    var array = new Uint8Array(8);
+    window.crypto.getRandomValues(array);
+    oracle.sign(props.score.score.toString(16), array).then(s => {
       console.log(`score: ${props.score.score.toString(16)}`);
       console.log(`signed: ${s.sbytes}`);
       console.log(`sig: ${s.sig}`);
