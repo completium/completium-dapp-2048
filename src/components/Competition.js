@@ -191,7 +191,7 @@ const Competition = (props) => {
         marginTop: 20,
         backgroundImage: "url(" + process.env.PUBLIC_URL + '/podium.svg)',
         backgroundRepeat: 'no-repeat',
-        backgroundPosition: 'right 50% top 220px',
+        backgroundPosition: 'right 50% top 240px',
       }}>
         <Grid item>
           <Typography color='textSecondary' style={{ fontWeight: 700, padding: 10 }}>Session actions</Typography>
@@ -219,8 +219,9 @@ const Competition = (props) => {
           status={props.status}
         />
         <Grid item>
-          <Typography color='textSecondary' style={{
+          <Typography color='secondary' style={{
             fontWeight: 700,
+            fontSize: 34,
             marginTop: 30,
             marginBottom: 80
           }}>Leader Board

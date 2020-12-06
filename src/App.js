@@ -32,7 +32,7 @@ function sortByScore(records) {
 
 const PageRouter = (props) => {
   var connect = useConnect();
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const prefersDarkMode = false; /*useMediaQuery('(prefers-color-scheme: dark)');*/
   const [arrows, setArrows] = useState([]);
   const [session, setSession] = useState(null);
   const [records, setRecords] = useState(null);
@@ -56,9 +56,9 @@ const PageRouter = (props) => {
         palette: {
           type: prefersDarkMode ? 'dark' : 'light',
           secondary: {
-            light: '#968a7e',
-            main: '#776E65',
-            dark: '#544d47',
+            light: '#fd7b52',
+            main: '#ff5722',
+            dark: '#b32b00',
             contrastText: '#fff',
           }
         },
