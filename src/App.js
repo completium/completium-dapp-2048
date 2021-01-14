@@ -9,9 +9,9 @@ import Grid from '@material-ui/core/Grid';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import Competition from './components/Competition';
 import { GameServer } from './server/GameServer';
-import { Tezos } from '@taquito/taquito';
 import { DAppProvider, useConnect } from './dapp.js';
 import SnackMsg from './components/SnackMsg';
+import { TezosToolkit } from '@taquito/taquito';
 
 function App() {
   return (
@@ -81,7 +81,7 @@ const PageRouter = (props) => {
   }
   async function loadRecords() {
     try {
-      Tezos.setProvider({rpc: 'https://testnet-tezos.giganode.io/'});
+      const Tezos = new TezosToolkit('https://delphinet-tezos.giganode.io');
       console.log(contractAddress);
       var contract  = await Tezos.contract.at(contractAddress);
       var cstorage  = await contract.storage();

@@ -7,7 +7,7 @@ import { Divider, LinearProgress } from '@material-ui/core';
 import { useReady, useAccountPkh, useTezos } from '../dapp.js';
 import { InMemorySigner } from '@taquito/signer';
 import { contractAddress } from '../settings.js';
-import { Tezos } from '@taquito/taquito';
+import { TezosToolkit } from '@taquito/taquito';
 
 import Actions from './Actions';
 
@@ -27,7 +27,7 @@ const Encrypt = (props) => {
     var nonce = new Uint8Array(8);
     window.crypto.getRandomValues(nonce);
     console.log(`score: ${props.score.score}`);
-    Tezos.setProvider({ rpc: 'https://testnet-tezos.giganode.io/' });
+    const Tezos = new TezosToolkit('https://delphinet-tezos.giganode.io');
     Tezos.rpc.packData({
       data: {
         prim: "Pair",
