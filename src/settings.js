@@ -1,4 +1,4 @@
-export const  contractAddress = "KT1KyjCqnPEqdEZcRzTsmECpoBM9ndv1rBBk"
+export const  contractAddress = "KT1WXMx4kQmDpPTCFEqgtthRuQR6udy7965k"
 
 export const githubUrl = "https://github.com/edukera/completium-dapp-2048"
 
