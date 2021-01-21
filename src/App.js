@@ -111,7 +111,7 @@ const PageRouter = (props) => {
     <ThemeProvider theme={theme}>
       <CssBaseline/>
       <HeaderBar appTitle={appTitle} handleConnect={handleConnect} theme={theme}/>
-      <Grid container direction="row" justify="center" alignItems="flex-start" style={{ width: '99%' }} >
+      <Grid container direction="row" justify="center" alignItems="flex-start" >
         <Grid item xs={8}>
           <Grid container direction="row" justify="center" alignItems="center">
             <Grid item>

@@ -141,7 +141,7 @@ const Game = (props) => {
       <Paper style={{ width: '494px', height: '494px', padding: 12 }}>
         <KeyboardEventHandler
           handleKeys={['up', 'down', 'left', 'right']}
-          onKeyEvent={(key, e) => move(key)}
+          onKeyEvent={(key, e) => {move(key); e.preventDefault();}}
         />
         <GridContainer />
         <div class="tile-container"> {

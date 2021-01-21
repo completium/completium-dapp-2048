@@ -72,7 +72,7 @@ const Encrypt = (props) => {
           color='secondary'
           disableElevation
           onClick={handleEncrypt}
-          disabled={!ready || props.score.score < 16 }
+          disabled={!ready || props.score.score < 16}
         >
           compute & encrypt score
       </Button>
@@ -108,7 +108,8 @@ const LeaderBoard = (props) => {
   return (
     <Grid container direction="row" justify="center" alignItems="center" style={{
       height: props.height,
-      overflow: 'scroll'
+      overflowX: 'hidden',
+      overflowY: 'scroll'
     }}>
       <Grid item xs={2} style={{
         paddingLeft: 20,
@@ -162,7 +163,7 @@ const Competition = (props) => {
       <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2} style={{
         paddingLeft: 15,
         paddingTop: 15,
-        overflow: 'scroll'
+        overflow: 'hidden'
       }}>
         <Grid item xs={3} style={{ padding: 10 }}>
           <Typography color='textSecondary'>Account:</Typography>
