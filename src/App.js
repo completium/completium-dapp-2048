@@ -81,19 +81,10 @@ const PageRouter = (props) => {
   }
   async function loadRecords() {
     try {
-      const Tezos = new TezosToolkit('https://delphinet-tezos.giganode.io');
-      console.log(contractAddress);
-      var contract  = await Tezos.contract.at(contractAddress);
-      var cstorage  = await contract.storage();
-      var recs      = [];
-      cstorage.submission.forEach((s, k, m) => {
-        recs.push({
-          score: parseInt('0'+s.score),
-          account: k
-        });
-      });
-      setRecords(sortByScore(recs));
-      setStatus(parseInt('0'+cstorage._state));
+      ///////////////////////////////////////////////////////////////////////////
+      // FIX ME
+      // read contract storage, mainly submission and call DApp's 'setRecords'
+      ///////////////////////////////////////////////////////////////////////////
     } catch (error) {
       console.log(`Error: ${error}`);
     }

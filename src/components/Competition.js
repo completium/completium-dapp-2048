@@ -23,46 +23,19 @@ const Encrypt = (props) => {
   const tezos = useTezos();
   const accountAddress = useAccountPkh();
   const handleEncrypt = () => {
-    var oracle = new InMemorySigner('edsk3eFocAKYDy2GfkFXFnj19ocDFwJ4M4cvrPURgaeyWp19LFzvHE');
-    var nonce = new Uint8Array(8);
-    window.crypto.getRandomValues(nonce);
-    console.log(`score: ${props.score.score}`);
-    const Tezos = new TezosToolkit('https://delphinet-tezos.giganode.io');
-    Tezos.rpc.packData({
-      data: {
-        prim: "Pair",
-        args: [
-          { string: accountAddress },
-          { int: props.score.score.toString() }
-        ]
-      }, type: {
-        prim: "pair",
-        args: [
-          { prim: "address" },
-          { prim: "nat" }
-        ]
-      }
-    }).then(wrappedPacked => {
-      const hexScore = wrappedPacked.packed;
-      oracle.sign(hexScore).then(s => {
-        console.log(`score: ${props.score.score.toString(16)}`);
-        console.log(`signed: ${s.sbytes}`);
-        console.log(`sig: ${s.sig}`);
-        console.log(`prefix: ${s.prefixSig}`);
-        props.setSigned({ packed: wrappedPacked.packed, value: s.prefixSig });
-      });
-    })
+    ///////////////////////////////////////////////////////////////////////////
+    // FIX ME
+    // Encrypt score:
+    // * invoke RPC call 'packData'
+    // * sign with Oracle's private key
+    // NB: this should be done via game server
+    ///////////////////////////////////////////////////////////////////////////
   }
   const submit = () => {
-    tezos.wallet.at(contractAddress).then(contract => {
-      contract.methods.submit(props.signed.packed, props.signed.value).send().then(op => {
-        props.openSnack();
-        op.receipt().then(() => {
-          props.closeSnack();
-          props.loadRecords();
-        });
-      }).catch(e => console.log(e));
-    });
+    ///////////////////////////////////////////////////////////////////////////
+    // FIX ME
+    // Submit score:
+    ///////////////////////////////////////////////////////////////////////////
   }
   if (props.signed.value === null) {
     return (
