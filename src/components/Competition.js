@@ -6,7 +6,7 @@ import Paper from '@material-ui/core/Paper';
 import { Divider, LinearProgress } from '@material-ui/core';
 import { useReady, useAccountPkh, useTezos } from '../dapp.js';
 import { InMemorySigner } from '@taquito/signer';
-import { contractAddress } from '../settings.js';
+import { contractAddress, endpoint } from '../settings.js';
 import { TezosToolkit } from '@taquito/taquito';
 
 import Actions from './Actions';

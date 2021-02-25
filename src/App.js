@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './App.css';
 import Game from './game/Game';
-import { appTitle, appName, contractAddress, network } from './settings.js';
+import { appTitle, appName, contractAddress, network, endpoint } from './settings.js';
 import HeaderBar from './components/HeaderBar';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';

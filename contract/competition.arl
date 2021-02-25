@@ -42,7 +42,7 @@ entry submit (packed_score : bytes, signed_score : signature) {
 
   effect {
     if check_signature(oracle, signed_score, packed_score) then (
-      match_option unpack<address * nat>(packed_score) with
+      match unpack<address * nat>(packed_score) with
       | some(s) ->
         if (s[0] <> caller) then fail ("bad caller");
         submission.addupdate(caller, {
