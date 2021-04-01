@@ -1,8 +1,8 @@
 {
   "files": {
     "main.css": "/completium-dapp-2048/static/css/main.6de05820.chunk.css",
-    "main.js": "/completium-dapp-2048/static/js/main.7f27d3aa.chunk.js",
-    "main.js.map": "/completium-dapp-2048/static/js/main.7f27d3aa.chunk.js.map",
+    "main.js": "/completium-dapp-2048/static/js/main.c6c0b24f.chunk.js",
+    "main.js.map": "/completium-dapp-2048/static/js/main.c6c0b24f.chunk.js.map",
     "runtime-main.js": "/completium-dapp-2048/static/js/runtime-main.f4932b75.js",
     "runtime-main.js.map": "/completium-dapp-2048/static/js/runtime-main.f4932b75.js.map",
     "static/js/2.480a1b38.chunk.js": "/completium-dapp-2048/static/js/2.480a1b38.chunk.js",
@@ -17,6 +17,6 @@
     "static/js/runtime-main.f4932b75.js",
     "static/js/2.480a1b38.chunk.js",
     "static/css/main.6de05820.chunk.css",
-    "static/js/main.7f27d3aa.chunk.js"
+    "static/js/main.c6c0b24f.chunk.js"
   ]
 }
