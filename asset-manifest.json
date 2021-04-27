@@ -1,22 +1,22 @@
 {
   "files": {
-    "main.css": "/completium-dapp-2048/static/css/main.6de05820.chunk.css",
-    "main.js": "/completium-dapp-2048/static/js/main.c6c0b24f.chunk.js",
-    "main.js.map": "/completium-dapp-2048/static/js/main.c6c0b24f.chunk.js.map",
-    "runtime-main.js": "/completium-dapp-2048/static/js/runtime-main.f4932b75.js",
-    "runtime-main.js.map": "/completium-dapp-2048/static/js/runtime-main.f4932b75.js.map",
-    "static/js/2.480a1b38.chunk.js": "/completium-dapp-2048/static/js/2.480a1b38.chunk.js",
-    "static/js/2.480a1b38.chunk.js.map": "/completium-dapp-2048/static/js/2.480a1b38.chunk.js.map",
-    "static/js/3.9854d47e.chunk.js": "/completium-dapp-2048/static/js/3.9854d47e.chunk.js",
-    "static/js/3.9854d47e.chunk.js.map": "/completium-dapp-2048/static/js/3.9854d47e.chunk.js.map",
+    "main.css": "/completium-dapp-2048/static/css/main.f057ccb2.chunk.css",
+    "main.js": "/completium-dapp-2048/static/js/main.d91ed4d9.chunk.js",
+    "main.js.map": "/completium-dapp-2048/static/js/main.d91ed4d9.chunk.js.map",
+    "runtime-main.js": "/completium-dapp-2048/static/js/runtime-main.5374d7d2.js",
+    "runtime-main.js.map": "/completium-dapp-2048/static/js/runtime-main.5374d7d2.js.map",
+    "static/js/2.16e86f61.chunk.js": "/completium-dapp-2048/static/js/2.16e86f61.chunk.js",
+    "static/js/2.16e86f61.chunk.js.map": "/completium-dapp-2048/static/js/2.16e86f61.chunk.js.map",
+    "static/js/3.a3e83308.chunk.js": "/completium-dapp-2048/static/js/3.a3e83308.chunk.js",
+    "static/js/3.a3e83308.chunk.js.map": "/completium-dapp-2048/static/js/3.a3e83308.chunk.js.map",
     "index.html": "/completium-dapp-2048/index.html",
-    "static/css/main.6de05820.chunk.css.map": "/completium-dapp-2048/static/css/main.6de05820.chunk.css.map",
-    "static/js/2.480a1b38.chunk.js.LICENSE.txt": "/completium-dapp-2048/static/js/2.480a1b38.chunk.js.LICENSE.txt"
+    "static/css/main.f057ccb2.chunk.css.map": "/completium-dapp-2048/static/css/main.f057ccb2.chunk.css.map",
+    "static/js/2.16e86f61.chunk.js.LICENSE.txt": "/completium-dapp-2048/static/js/2.16e86f61.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.f4932b75.js",
-    "static/js/2.480a1b38.chunk.js",
-    "static/css/main.6de05820.chunk.css",
-    "static/js/main.c6c0b24f.chunk.js"
+    "static/js/runtime-main.5374d7d2.js",
+    "static/js/2.16e86f61.chunk.js",
+    "static/css/main.f057ccb2.chunk.css",
+    "static/js/main.d91ed4d9.chunk.js"
   ]
 }
