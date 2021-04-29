@@ -1,6 +1,6 @@
 archetype competition
 
-variable organizer : role = @tz1NUKyDbQtSu4g1bgpwgvwqTeggbtKrNkdv
+variable organizer : address = @tz1NUKyDbQtSu4g1bgpwgvwqTeggbtKrNkdv
 
 variable prize : tez = 10tz
 
