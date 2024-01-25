@@ -1,0 +1,91 @@
+archetype competition(start : date)
+
+variable organizer : address = @tz1NUKyDbQtSu4g1bgpwgvwqTeggbtKrNkdv
+
+variable prize : tez = 10tz
+
+constant oracle : key = "edpkv9k8WZNMyEMuLLVwQfGDqm4pfxSEkTmvgq5DakPUnNbNnQuB14"
+
+constant noncelength : nat = 8
+
+asset submission {
+  competitor : address;
+  score      : nat;
+  timestamp  : date;
+} initialized by {
+  { @tz1ZXf37ZNfVupt5GVyrPJ76q8kbjFuD2z7R; 236;   start };
+  { @tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg; 5432;  start };
+  { @tz1ZAQXACaEqryobpBoLbJUc2DjG5ZzrhARu; 874;   start };
+  { @tz1YwPJUNoU9qQTtFtsg6mjWUGSkXtf2uDHc; 1644;  start };
+  { @tz1XZ7s6uStC2hZVpPQhXgcdXPwxifByF3Ao; 15624; start };
+  { @tz1UUHt41ukVHcamQ5YZgGWsm6mXasVBt6Ln; 10354; start };
+  { @tz1cck7sNvM3TWkUA9VGWnyBW44uxMLz9vGg; 688;   start }
+}
+
+(* state machine *)
+states =
+ | Created     initial
+ | InProgress
+ | Done
+ | Closed
+
+transition confirm () {
+  called by organizer
+  from Created
+  to InProgress when { transferred = prize }
+}
+
+entry submit (packed_score : bytes, signed_score : signature) {
+  require {
+    c1 : state = InProgress;
+  }
+
+  effect {
+    if check_signature(oracle, signed_score, packed_score) then (
+      match unpack<address * nat>(packed_score) with
+      | some(s) ->
+        if (s[0] <> caller) then fail ("bad caller");
+        submission.add_update(caller, {
+          score = s[1];
+          timestamp = now
+        })
+      | none -> fail("cannot unpack score")
+      end
+    ) else fail("not signed by oracle");
+  }
+}
+
+transition decide () {
+  called by organizer
+  from InProgress
+  to Done
+  with effect {
+    var submissions = submission.sort(desc(score), timestamp);
+      if submissions.count() >= 3
+      then (
+        var first  ?= submissions.nth(0);
+        var second ?= submissions.nth(1);
+        var third  ?= submissions.nth(2);
+        var q1 = 0.5 * prize;
+        var q2 = 0.3 * prize;
+        var q3 = 0.2 * prize;
+        transfer q1 to first;
+        transfer q2 to second;
+        transfer q3 to third;
+        transfer (prize - q1 - q2 - q3) to organizer)
+        else if (submissions.count() >= 2)
+             then (
+               var first  ?= submissions.nth(0);
+               var second ?= submissions.nth(1);
+               var q1 = 0.6 * prize;
+               var q2 = 0.4 * prize;
+               transfer q1 to first;
+               transfer q2 to second;
+               transfer (prize - q1 - q2) to organizer)
+             else if (submissions.count() >= 1)
+               then (
+                 var first ?= submissions.nth(0);
+                 transfer prize to first)
+               else transfer prize to organizer
+  }
+}
