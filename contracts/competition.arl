@@ -1,4 +1,4 @@
-archetype competition(start : date)
+archetype competition(const start : date)
 
 variable organizer : address = @tz1NUKyDbQtSu4g1bgpwgvwqTeggbtKrNkdv
 

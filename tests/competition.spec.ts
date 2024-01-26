@@ -3,7 +3,7 @@ import { configure_experiment, expect_to_fail, get_account, set_mockup, set_mock
 
 import { competition } from './binding/competition'
 
-import assert from 'assert'
+// import assert from 'assert'
 
 /* Accounts ---------------------------------------------------------------- */
 

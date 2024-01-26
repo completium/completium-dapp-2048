@@ -115,38 +115,31 @@ export class Competition {
         }
         throw new Error("Contract not initialised");
     }
-    async get_start(): Promise<Date> {
-        if (this.address != undefined) {
-            const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_date((storage as att.Mpair).args[0]);
-        }
-        throw new Error("Contract not initialised");
-    }
     async get_organizer(): Promise<att.Address> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.Address.from_mich((storage as att.Mpair).args[1]);
+            return att.Address.from_mich((storage as att.Mpair).args[0]);
         }
         throw new Error("Contract not initialised");
     }
     async get_prize(): Promise<att.Tez> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.Tez.from_mich((storage as att.Mpair).args[2]);
+            return att.Tez.from_mich((storage as att.Mpair).args[1]);
         }
         throw new Error("Contract not initialised");
     }
     async get_submission(): Promise<submission_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map((storage as att.Mpair).args[3], (x, y) => [att.Address.from_mich(x), submission_value.from_mich(y)]);
+            return att.mich_to_map((storage as att.Mpair).args[2], (x, y) => [att.Address.from_mich(x), submission_value.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }
     async get_state(): Promise<states> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const state = (storage as att.Mpair).args[4];
+            const state = (storage as att.Mpair).args[3];
             switch (att.Int.from_mich(state).to_number()) {
                 case 0: return states.Created;
                 case 1: return states.InProgress;
