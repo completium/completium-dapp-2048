@@ -1,10 +1,8 @@
-archetype competition(const start : date)
-
-variable organizer : address = @tz1NUKyDbQtSu4g1bgpwgvwqTeggbtKrNkdv
-
-variable prize : tez = 10tz
-
-constant oracle : key = "edpkv9k8WZNMyEMuLLVwQfGDqm4pfxSEkTmvgq5DakPUnNbNnQuB14"
+archetype competition(
+  organizer : address,
+  prize : tez,
+  oracle : key,
+  const init_submission : map<address, (nat * date)>)
 
 constant noncelength : nat = 8
 
@@ -12,15 +10,7 @@ asset submission {
   competitor : address;
   score      : nat;
   timestamp  : date;
-} initialized by {
-  { @tz1ZXf37ZNfVupt5GVyrPJ76q8kbjFuD2z7R; 236;   start };
-  { @tz1Lc2qBKEWCBeDU8npG6zCeCqpmaegRi6Jg; 5432;  start };
-  { @tz1ZAQXACaEqryobpBoLbJUc2DjG5ZzrhARu; 874;   start };
-  { @tz1YwPJUNoU9qQTtFtsg6mjWUGSkXtf2uDHc; 1644;  start };
-  { @tz1XZ7s6uStC2hZVpPQhXgcdXPwxifByF3Ao; 15624; start };
-  { @tz1UUHt41ukVHcamQ5YZgGWsm6mXasVBt6Ln; 10354; start };
-  { @tz1cck7sNvM3TWkUA9VGWnyBW44uxMLz9vGg; 688;   start }
-}
+} initialized with init_submission
 
 (* state machine *)
 states =

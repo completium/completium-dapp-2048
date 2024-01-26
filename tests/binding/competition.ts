@@ -73,9 +73,22 @@ export class Competition {
         }
         throw new Error("Contract not initialised");
     }
-    async deploy(start: Date, params: Partial<ex.Parameters>) {
+    async deploy(organizer: att.Address, prize: att.Tez, oracle: att.Key, init_submission: Array<[
+        att.Address,
+        [
+            att.Nat,
+            Date
+        ]
+    ]>, params: Partial<ex.Parameters>) {
         const address = (await ex.deploy("./contracts/competition.arl", {
-            start: att.date_to_mich(start)
+            organizer: organizer.to_mich(),
+            prize: prize.to_mich(),
+            oracle: oracle.to_mich(),
+            init_submission: att.list_to_mich(init_submission, x => {
+                const x_key = x[0];
+                const x_value = x[1];
+                return att.elt_to_mich(x_key.to_mich(), att.pair_to_mich([x_value[0].to_mich(), att.date_to_mich(x_value[1])]));
+            })
         }, params)).address;
         this.address = address;
     }
@@ -129,17 +142,24 @@ export class Competition {
         }
         throw new Error("Contract not initialised");
     }
+    async get_oracle(): Promise<att.Key> {
+        if (this.address != undefined) {
+            const storage = await ex.get_raw_storage(this.address);
+            return att.Key.from_mich((storage as att.Mpair).args[2]);
+        }
+        throw new Error("Contract not initialised");
+    }
     async get_submission(): Promise<submission_container> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            return att.mich_to_map((storage as att.Mpair).args[2], (x, y) => [att.Address.from_mich(x), submission_value.from_mich(y)]);
+            return att.mich_to_map((storage as att.Mpair).args[3], (x, y) => [att.Address.from_mich(x), submission_value.from_mich(y)]);
         }
         throw new Error("Contract not initialised");
     }
     async get_state(): Promise<states> {
         if (this.address != undefined) {
             const storage = await ex.get_raw_storage(this.address);
-            const state = (storage as att.Mpair).args[3];
+            const state = (storage as att.Mpair).args[4];
             switch (att.Int.from_mich(state).to_number()) {
                 case 0: return states.Created;
                 case 1: return states.InProgress;
